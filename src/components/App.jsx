@@ -1,36 +1,20 @@
 import ContactForm from "./ContactForm/ContactForm";
 import SearchBox from "./SearchBox/SearchBox";
 import ContactList from "./ContactList/ContactList";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchContacts } from "../redux/contactsOps";
+import Loader from "./Loader/Loader";
+import Error from "./Error/Error";
 
 export default function App() {
-  // const [contactData, setContactsData] = useState(() => {
-  //   const savedContacts = window.localStorage.getItem("saved-contacts");
+  const dispatch = useDispatch();
+  const isLoading = useSelector((state) => state.contacts.loading);
+  const isError = useSelector((state) => state.contacts.error);
 
-  //   if (savedContacts !== null) {
-  //     return JSON.parse(savedContacts);
-  //   }
-  //   return contacts;
-  // });
-  // console.log(contactData);
-
-  // const addContacts = (newContact) => {
-  //   setContactsData((prevContacts) => {
-  //     return [...prevContacts, { ...newContact, id: nanoid() }];
-  //   });
-  // };
-
-  // const deleteContact = (contactId) => {
-  //   setContactsData((prevContacts) => {
-  //     return prevContacts.filter((con) => con.id !== contactId);
-  //   });
-  // };
-
-  //
-
-  // const arrContacts = contactData.filter((el) => {
-  //   const contactName = el.name.toLowerCase();
-  //   return contactName.includes(inputValue.toLowerCase());
-  // });
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   return (
     <div>
@@ -38,6 +22,8 @@ export default function App() {
       <ContactForm />
       <SearchBox />
       <ContactList />
+      {isLoading && <Loader />}
+      {isError && <Error />}
     </div>
   );
 }
